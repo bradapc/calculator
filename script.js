@@ -7,6 +7,10 @@ const operateSelect = document.querySelectorAll('.operator');
 operateSelect.forEach(operatorListener => operatorListener.addEventListener('click', setOperator));
 const equals = document.querySelector('.equals');
 equals.addEventListener('click', displayNumber);
+const resultText = document.querySelector('.result-text');
+const clear = document.querySelector('.clear');
+clear.addEventListener('click', clearInput);
+let result = '';
 
 function add(a, b){
     return a + b;
@@ -37,7 +41,6 @@ function operate(operator, num1, num2) {
 }
 
 function addDigit() {
-    const resultText = document.querySelector('.result-text');
     let previousText = `${num1} ${operator}`
     if(!operator) {
         num1 += this.id;
@@ -54,14 +57,32 @@ function addDigit() {
 function setOperator() {
     if(!operator) {
         operator = this.id;
-        const resultText = document.querySelector('.result-text');
         resultText.textContent = `${num1} ${operator}`;
+    } else if(operator && num1 && num2) {
+        operator = this.id;
+        resultText.textContent = `${result} ${operator}`;
+        displayNumber()
+    } else {
+        operator = this.id
+        resultText.textContent = `${result} ${operator}`
     }
 }
 
 function displayNumber() {
-    num1 = Number.parseInt(num1);
-    num2 = Number.parseInt(num2);
-    let result = operate(operator, num1, num2);
-    alert(result);
+    if(operator && num1 && num2) {
+        num1 = Number.parseInt(num1);
+        num2 = Number.parseInt(num2);
+        result = operate(operator, num1, num2);
+        resultText.textContent = result;
+        num1 = result;
+        num2 = '';
+    }
+}
+
+function clearInput() {
+    resultText.textContent = '0';
+    num1 = '';
+    num2 = ''
+    result = ''
+    operator = ''
 }
