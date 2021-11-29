@@ -90,7 +90,7 @@ function addDigit() { //Handles all result text & rules for using calculator
 }
 
 function setOperator() {
-    if(num1 && num1 != '-') { //Prevents adding two negative signs to num1
+    if(num1 && num1 != '-' && num2 != '-') { //Prevents adding two negative signs to num1 and num2
         if(!operator) { //If no calculation has been done yet
             operator = this.id;
             resultText.textContent = `${num1} ${operator}`;
@@ -98,6 +98,9 @@ function setOperator() {
             displayNumber() //Calculates current operation before adding new operator
             operator = this.id;
             resultText.textContent = `${result} ${operator}`;
+        } else if(operator && num1 && !num2 && this.id == '-') { //Checks if num2 can accept a negative sign
+            num2 += this.id;
+            resultText.textContent = `${num1} ${operator} ${num2}`;
         }
     } else if(!num1 && this.id == '-') { //If no number input has been entered and '-' is hit, make it a negative number
         num1 += this.id;
@@ -107,14 +110,21 @@ function setOperator() {
 
 function displayNumber() {
     if(operator && num1 && num2) { //Makes sure there is input to use = button
-        num1 = Number.parseFloat(num1);
-        num2 = Number.parseFloat(num2);
-        //nums stored as strings so convert to floating point to allow operation
-        result = operate(operator, num1, num2);
-        resultText.textContent = result;
-        num1 = `${result}`; //Sets num1 to string of result to allow further operation
-        num2 = '';
-        operator = '';
+        if(operator == '/' && num2 == '0') { //Prevents division by zero
+            resultText.textContent = 'Nice try :)';
+            num1 = ''
+            num2 = ''
+            operator = '';
+        } else {
+            num1 = Number.parseFloat(num1);
+            num2 = Number.parseFloat(num2);
+            //nums stored as strings so convert to floating point to allow operation
+            result = operate(operator, num1, num2);
+            resultText.textContent = result;
+            num1 = `${result}`; //Sets num1 to string of result to allow further operation
+            num2 = '';
+            operator = '';
+        }
     }
 }
 
